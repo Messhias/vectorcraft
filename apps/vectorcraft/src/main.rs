@@ -30,6 +30,7 @@ mod mac_menu;
 mod open_documents;
 mod prefs_dir;
 mod printing;
+mod screen_ppi;
 #[cfg(all(windows, not(target_vendor = "win7")))]
 mod system_fonts;
 mod window;
@@ -70,6 +71,9 @@ impl eframe::App for App {
         }
         #[cfg(target_os = "macos")]
         open_files(&mut self.app, open_documents::take());
+        if let Some(ppi) = screen_ppi::primary() {
+            self.app.screen_ppi = ppi;
+        }
         self.app.logic(ctx);
         window::track(ctx, &mut self.app.ui.window);
         if self.app.ui.status == "quit" {
